@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="400" viewBox="0 0 1200 400"
+     role="img" aria-labelledby="title desc">
+  <title id="title">repopulse — Codebase intelligence from git</title>
+  <desc id="desc">Terminal-themed hero showing the repopulse skill: two commands, pulse and trace, with a sample pulse output on a dark terminal screen.</desc>
+
+  <defs>
+    <linearGradient id="accent-glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3fb950"/>
+      <stop offset="100%" stop-color="#58a6ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="400" rx="8" fill="#0d1117"/>
+
+  <!-- Subtle grid dots -->
+  <g fill="#161b22" opacity="0.5">
+    <circle cx="48" cy="48" r="2"/><circle cx="128" cy="48" r="2"/>
+    <circle cx="208" cy="48" r="2"/><circle cx="288" cy="48" r="2"/>
+    <circle cx="368" cy="48" r="2"/><circle cx="448" cy="48" r="2"/>
+    <circle cx="528" cy="48" r="2"/><circle cx="608" cy="48" r="2"/>
+    <circle cx="688" cy="48" r="2"/><circle cx="768" cy="48" r="2"/>
+    <circle cx="848" cy="48" r="2"/><circle cx="928" cy="48" r="2"/>
+    <circle cx="1008" cy="48" r="2"/><circle cx="1088" cy="48" r="2"/>
+  </g>
+
+  <!-- Left panel: identity -->
+  <g transform="translate(64, 60)">
+    <!-- Eyebrow -->
+    <text x="0" y="0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="20" fill="#8b949e" letter-spacing="2">GUIYNSO/DEVOPS-ANALYTICS</text>
+
+    <!-- Name -->
+    <text x="0" y="72" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="72" fill="#e6edf3" font-weight="700" letter-spacing="-1">repopulse</text>
+
+    <!-- Tagline -->
+    <text x="0" y="112" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+          font-size="22" fill="#8b949e">Codebase intelligence from git</text>
+
+    <!-- Terminal output -->
+    <rect x="0" y="148" width="640" height="142" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+
+    <!-- Terminal title bar -->
+    <rect x="0" y="148" width="640" height="32" rx="6" fill="#21262d"/>
+    <rect x="0" y="172" width="640" height="8" fill="#21262d"/>
+    <text x="24" y="170" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="14" fill="#8b949e">repopulse — ~/repo</text>
+
+    <!-- Terminal content -->
+    <!-- Prompt line -->
+    <text x="24" y="210" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="16" fill="#58a6ff">$</text>
+    <text x="52" y="210" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="16" fill="#e6edf3">repopulse pulse</text>
+
+    <!-- Output line 1 -->
+    <text x="24" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="14" fill="#8b949e">Commits:  47 · 5 contributors</text>
+
+    <!-- Output line 2 -->
+    <text x="24" y="256" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="14" fill="#8b949e">Churn:    src/payment (40%), src/api (22%)</text>
+
+    <!-- Output line 3 with steady verdict -->
+    <text x="24" y="276" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="14" fill="#8b949e">Verdict:  </text>
+    <text x="114" y="276" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="14" fill="#3fb950" font-weight="700">STEADY</text>
+  </g>
+
+  <!-- Right panel: branch diagram -->
+  <g transform="translate(768, 120)">
+    <!-- pulse box -->
+    <rect x="0" y="0" width="180" height="80" rx="6" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="90" y="36" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="22" fill="#3fb950" font-weight="600">pulse</text>
+    <text x="90" y="58" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+          font-size="14" fill="#8b949e">Health snapshot</text>
+
+    <!-- arrow -->
+    <path d="M 180 40 L 220 40" stroke="#30363d" stroke-width="2" stroke-dasharray="4,3"/>
+    <polygon points="220,34 230,40 220,46" fill="#30363d"/>
+
+    <!-- trace box -->
+    <rect x="230" y="0" width="180" height="80" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="320" y="36" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="22" fill="#58a6ff" font-weight="600">trace</text>
+    <text x="320" y="58" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+          font-size="14" fill="#8b949e">Question answer</text>
+
+    <!-- Divider -->
+    <line x1="0" y1="110" x2="410" y2="110" stroke="#30363d" stroke-width="1" opacity="0.5"/>
+
+    <!-- Legend -->
+    <text x="0" y="136" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="13" fill="#8b949e">2 commands</text>
+    <text x="0" y="156" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="13" fill="#8b949e">1 skill file</text>
+    <text x="0" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="13" fill="#8b949e">Zero context cost</text>
+  </g>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="370" width="1200" height="30" fill="#161b22"/>
+  <text x="64" y="390" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+        font-size="14" fill="#484f58">MIT · Codex Skill · v1.0</text>
+  <text x="1070" y="390" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+        font-size="14" fill="#484f58">git-based · user-invoked</text>
+</svg>
