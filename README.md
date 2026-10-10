@@ -1,96 +1,63 @@
+<!-- Project identity and workflow are composed in the SVG below. -->
 <p align="center">
   <img src="./assets/readme/hero.svg" width="100%"
-       alt="repopulse — Codebase intelligence from git. A terminal-themed hero showing the two commands: pulse for health snapshot, trace for question answering.">
+       alt="RepoPulse maps Git history into two paths: pulse reports repository rhythm and hotspots; trace follows commits through inspected diffs to evidence.">
 </p>
 
----
-
-## What is repopulse
-
-RepoPulse is a user-invoked Codex skill for understanding unfamiliar Git repositories.
+RepoPulse is a user-invoked Codex skill for understanding unfamiliar Git repositories. Run `repopulse pulse` for a health snapshot, or `repopulse trace "..."` to investigate a question through Git history. Git is required; GitHub CLI (`gh`) is optional for pull-request context.
 
 ## Quick start
 
-Git is required; GitHub CLI is optional for pull-request context.
-
 ### Install
 
-Windows PowerShell:
+Clone the repository once:
+
+```bash
+git clone https://github.com/Guivyn/repopulse.git
+cd repopulse
+```
+
+Install the skill:
+
+**Windows PowerShell**
 
 ```powershell
 $skillsDir = if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME "skills" } else { Join-Path $HOME ".codex\skills" }
-New-Item -ItemType Directory -Force $skillsDir | Out-Null
-Copy-Item -Path ".\skills\repopulse" -Destination $skillsDir -Recurse -Force
+$skillDir = Join-Path $skillsDir "repopulse"
+New-Item -ItemType Directory -Force $skillDir | Out-Null
+Copy-Item .\skills\repopulse\*.md -Destination $skillDir -Force
 ```
 
-macOS / Linux:
+**macOS / Linux**
 
 ```bash
-mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-cp -R skills/repopulse "${CODEX_HOME:-$HOME/.codex}/skills/repopulse"
+skill_dir="${CODEX_HOME:-$HOME/.codex}/skills/repopulse"
+mkdir -p "$skill_dir"
+cp skills/repopulse/*.md "$skill_dir/"
 ```
 
-### Try it
+### Run
 
-Run `repopulse pulse` for a health snapshot, or `repopulse trace "..."` to investigate a question through Git history in a Codex session pointed at a Git repository.
+In a Codex session pointed at a Git repository:
 
----
+```text
+repopulse pulse
+repopulse trace "Why does src/payment/handler.go keep changing?"
+```
 
-## From EIA to repopulse
+## Example output
 
-The previous version was a six-skill pipeline with JSON contracts and bilingual rules. **repopulse** cuts the surface area to a fraction while keeping the core insight: git holds the answers.
-
-| | EIA (old) | repopulse |
-|---|---|---|
-| **Files** | 6 skills, pipeline orchestration | 1 `SKILL.md` + 1 reference file |
-| **Context cost** | Always loaded (model-invoked) | Zero cost (user-invoked) |
-| **Data** | git + GitHub + external APIs | git first, `gh` when available |
-| **Output** | JSON schemas per step | Natural language |
-| **Size** | ~30 KB | ~4.7 KB |
-
----
-
-## Two branches
-
-### Pulse
-
-A quick health snapshot. Three steps:
-
-1. **Read the shape** — `git log` for commit cadence, contributor distribution, and file churn.
-2. **Read the open work** — `gh pr list` for in-flight pull requests.
-3. **Synthesise a verdict** — **steady**, **frayed**, or **hot**, with supporting evidence.
-
-Use pulse before any unfamiliar repository. It answers: _is this repo healthy, and where should I look next?_
-
-Completion criterion: a pulse verdict is written.
-
-### Trace
-
-Follow a question backward through the commit graph. Given a file, a time window, a PR number, or a symptom, it gathers a small set of Git evidence and checks relevant diffs; explanations are supported by evidence or labeled as inference/unknown.
-
-| When you ask about | It starts with |
-|---|---|
-| A file or module | `git log --since="90 days ago" -- <path>` |
-| A bug or regression | `git log --all --oneline --grep="fix" --since="90 days ago"` |
-| Who changed what | `git shortlog -sn --since="90 days ago" -- <path>` |
-| A time window | `git log --after / --before` with `--format` |
-| A PR | `gh pr view <number> --json commits,files,reviews` |
-
-Completion criterion: the question is answered with evidence, or an explicit data gap is stated.
-
-### Example output
-
-The following examples are illustrative only; repository details and commit IDs are fictional.
+Examples are illustrative; repository details and commit IDs are fictional.
 
 **Pulse**
 
 ```text
 Pulse: frayed
 
-- Rhythm: 8 commits in the last 30 days, down from 18 in the previous 30 days.
-- Shape: 7 of 8 commits came from one contributor; most churn is in src/payment/handler.go.
-- Open work: 2 PRs, from gh pr list.
-- Gap: no deployment data, so this does not establish production health.
+- Rhythm: 8 commits in the last 30 days, down from 18 in the previous 30.
+- Shape: 7 of 8 commits came from one contributor; most churn is in src/payment/.
+- Open work: 2 PRs, reported by gh.
+- Gap: Git history has no deployment data, so production health is unknown.
 ```
 
 **Trace**
@@ -98,42 +65,24 @@ Pulse: frayed
 ```text
 Question: Why does src/payment/handler.go keep changing?
 
-Answer: Recent changes center on retry handling. This is an inference from the diffs.
+Answer: Two inspected patches change retry handling. That describes the code changes, not their cause.
 Evidence:
-- a1b2c3d — the diff changes retry handling in src/payment/handler.go.
-- d4e5f6a — the diff adds timeout coverage in the same path.
-Unknown: the available Git history does not establish the production incident or original motivation.
+- a1b2c3d — diff changes retry handling in src/payment/handler.go.
+- d4e5f6a — diff adds timeout coverage in src/payment/handler_test.go.
+Inference: the changes appear focused on retry behavior.
+Unknown: Git history does not establish the production incident or original motivation.
 ```
 
----
+## How it works
 
-## Implementation
+**Pulse** reads recent commit rhythm, contributor shape, and file churn. If `gh` is available, it can also include open pull requests. The verdict—**steady**, **frayed**, or **hot**—is a quick signal, not a production audit.
 
-```
-skills/repopulse/
-├── SKILL.md         — Core behaviour (user-invoked, 2 branches, completion criteria)
-└── commands.md      — External reference (exact git flag combinations)
-```
+**Trace** starts with targeted history, then inspects relevant patches with `git show`. Historical claims include a commit SHA and path; interpretations are labeled as inference, and causes or intent that Git cannot establish are stated as unknown. A commit title alone is not evidence of why code changed.
 
-### Design decisions
+## Project files
 
-**User-invoked.** `disable-model-invocation: true` removes the description from the agent's context. The skill costs nothing until called by name.
+- `skills/repopulse/SKILL.md` — the two workflows and evidence rules.
+- `skills/repopulse/commands.md` — exact Git commands for common questions.
 
-**Leading word "pulse".** The model already understands _pulse_ as a quick check — its pretrained meaning costs no tokens to install. The verdicts (steady / frayed / hot) extend the metaphor naturally.
-
-**Progressive disclosure.** Basic git commands are inlined in `SKILL.md`. Exact flag combinations with edge cases live in `commands.md`, loaded only when the agent needs them.
-
-**Single pass per call.** The skill runs exactly one branch. No orchestration, no pipeline state, no JSON handoff.
-
----
-
-## Development
-
-**License:** MIT
-
-To modify:
-
-1. Edit `skills/repopulse/SKILL.md`.
-2. Run the skill against a test repository.
-3. If behaviour diverges from the completion criteria, sharpen the wording or move edge-case commands to `commands.md`.
+Edit these files to change the skill. The repository is MIT licensed; see [LICENSE](./LICENSE).
 
