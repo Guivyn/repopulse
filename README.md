@@ -7,9 +7,32 @@
 
 ## What is repopulse
 
-**repopulse** is a lightweight, git-first [Codex skill](https://docs.codex.com) that answers questions about a codebase. Give it a repository, and it produces a readable health snapshot — or follows a specific question backward through the commit graph.
+RepoPulse is a user-invoked Codex skill for understanding unfamiliar Git repositories.
 
-No dashboards, no databases, no external tokens required.
+## Quick start
+
+Git is required; GitHub CLI is optional for pull-request context.
+
+### Install
+
+Windows PowerShell:
+
+```powershell
+$skillsDir = if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME "skills" } else { Join-Path $HOME ".codex\skills" }
+New-Item -ItemType Directory -Force $skillsDir | Out-Null
+Copy-Item -Path ".\skills\repopulse" -Destination $skillsDir -Recurse -Force
+```
+
+macOS / Linux:
+
+```bash
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+cp -R skills/repopulse "${CODEX_HOME:-$HOME/.codex}/skills/repopulse"
+```
+
+### Try it
+
+Run `repopulse pulse` for a health snapshot, or `repopulse trace "..."` to investigate a question through Git history in a Codex session pointed at a Git repository.
 
 ---
 
@@ -57,24 +80,6 @@ Completion criterion: the question is answered with evidence, or an explicit dat
 
 ---
 
-## Quick start
-
-**Prerequisites:** git (required), GitHub CLI `gh` with auth (optional, for PR data).
-
-The skill is user-invoked. In any Codex session pointed at a git repository:
-
-```bash
-# Health snapshot
-repopulse pulse
-
-# Specific question
-repopulse trace "why is src/payment/test_handler.go changing every week?"
-```
-
-That is the full API. Two commands.
-
----
-
 ## Implementation
 
 ```
@@ -105,8 +110,3 @@ To modify:
 2. Run the skill against a test repository.
 3. If behaviour diverges from the completion criteria, sharpen the wording or move edge-case commands to `commands.md`.
 
-To install locally:
-
-```bash
-cp -r skills/repopulse ~/.codex/skills/repopulse
-```
