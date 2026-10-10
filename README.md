@@ -66,7 +66,7 @@ Completion criterion: a pulse verdict is written.
 
 ### Trace
 
-Follow a question backward through the commit graph. Given a file, a time window, a PR number, or a symptom, it runs 2–4 git commands and reports the causal chain.
+Follow a question backward through the commit graph. Given a file, a time window, a PR number, or a symptom, it gathers a small set of Git evidence and checks relevant diffs; explanations are supported by evidence or labeled as inference/unknown.
 
 | When you ask about | It starts with |
 |---|---|
@@ -77,6 +77,33 @@ Follow a question backward through the commit graph. Given a file, a time window
 | A PR | `gh pr view <number> --json commits,files,reviews` |
 
 Completion criterion: the question is answered with evidence, or an explicit data gap is stated.
+
+### Example output
+
+The following examples are illustrative only; repository details and commit IDs are fictional.
+
+**Pulse**
+
+```text
+Pulse: frayed
+
+- Rhythm: 8 commits in the last 30 days, down from 18 in the previous 30 days.
+- Shape: 7 of 8 commits came from one contributor; most churn is in src/payment/handler.go.
+- Open work: 2 PRs, from gh pr list.
+- Gap: no deployment data, so this does not establish production health.
+```
+
+**Trace**
+
+```text
+Question: Why does src/payment/handler.go keep changing?
+
+Answer: Recent changes center on retry handling. This is an inference from the diffs.
+Evidence:
+- a1b2c3d — the diff changes retry handling in src/payment/handler.go.
+- d4e5f6a — the diff adds timeout coverage in the same path.
+Unknown: the available Git history does not establish the production incident or original motivation.
+```
 
 ---
 

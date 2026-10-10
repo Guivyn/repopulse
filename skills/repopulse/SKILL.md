@@ -55,6 +55,7 @@ Follow a question backward through the commit graph.
 | If the question is about... | Start here |
 |---|---|
 | a file or module | `git log --since="90 days ago" -- <path>` |
+| a renamed file | `git log --follow --since="90 days ago" -- <path>` |
 | a bug or regression | `git log --all --oneline --grep="fix" --since="90 days ago"` |
 | who changed X | `git shortlog -sn --since="90 days ago" -- <path>` |
 | a time window | `git log --after="date" --before="date" --format="%h %an %s"` |
@@ -62,11 +63,17 @@ Follow a question backward through the commit graph.
 
 **1. Pick the starting point** from the table above. Read `commands.md` for exact flag combinations.
 
-**2. Run git commands.** Run 2–4 commands; stop when the question is answered.
+**2. Find and verify the relevant changes.** Start with 2–4 git commands. When explaining how or why code changed, inspect the patch for the relevant commit(s) with `git show --format=fuller --find-renames <commit> -- <path>`. A commit message records what someone wrote; it does not prove the underlying cause. Read only the diffs needed to support the answer, and widen the search only when the evidence is insufficient.
 
-**3. Report.** Concise, causal: _"src/payment/handler.go has 3 authors but 70% of commits are Alice. Last change was 3 days ago (fix null pointer)."_
+**3. Report.** Lead with the answer, then give evidence. For each historical claim, include the commit SHA and relevant path (or the author/date metadata for an authorship question). Separate:
 
-**Completion criterion**: The user's question is answered with evidence, or an explicit data gap is stated.
+- **Evidence** — what the commit metadata or inspected diff directly shows.
+- **Inference** — an interpretation supported by that evidence, labeled as an inference.
+- **Unknowns** — causes, intent, or history the available Git data cannot establish.
+
+Do not claim causality, author intent, or a root cause from a commit message or timing alone. If the repository is shallow or the relevant history is missing, state that limit and avoid "first" or "original" claims.
+
+**Completion criterion**: The user's question is answered with evidence, or an explicit data gap is stated. Historical explanations must be supported by the relevant diff or clearly labeled as inference/unknown.
 
 ---
 
@@ -76,6 +83,7 @@ Follow a question backward through the commit graph.
 - **Prefer git over gh.** Git works offline and is faster; use gh only when you need PR/issue data and `gh` is configured.
 - **Every number has context.** Not "5 bugs" but "5 bugs, 3 in payment module (60%)".
 - **Data gaps are honest.** "No deploy data — lead time unavailable." Not silence.
+- **Messages are not causes.** Verify explanations against diffs; label unsupported causes and intent as unknown.
 - **One branch per call.** Run pulse or trace, not both.
 
 ---

@@ -23,9 +23,18 @@ git log --since="30 days ago" --format="" --name-only | sort | uniq -c | sort -r
 ## Trace commands
 
 ```bash
-# Module history
+# File history, including renames
+git log --follow --since="90 days ago" --format="%h %an %cI %s" -- <path>
+
+# Module or path history
 git log --since="90 days ago" -- <path>
 git shortlog -sn --since="90 days ago" -- <path>
+
+# Inspect the actual patch before explaining how or why it changed
+git show --format=fuller --find-renames <commit> -- <path>
+
+# Check whether the available history is shallow before making "first" or "original" claims
+git rev-parse --is-shallow-repository
 
 # Search for fix commits
 git log --all --oneline --grep="fix" --since="90 days ago"
